@@ -10,9 +10,12 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using IConnApp.Data;
+using IConnApp.Data.Repositories;
 using IConnApp.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using AutoMapper;
+using IConnApp.ViewModels.Users;
 
 namespace IConnApp
 {
@@ -43,6 +46,13 @@ namespace IConnApp
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
+
+            services.AddTransient<IUsersRepository, UsersRepository>();
+
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<ApplicationUser, UserViewModel>();
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
