@@ -51,7 +51,7 @@ namespace IConnApp
 
             Mapper.Initialize(cfg =>
             {
-                cfg.CreateMap<ApplicationUser, UserViewModel>();
+                cfg.AddProfile(new UserProfile());
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
