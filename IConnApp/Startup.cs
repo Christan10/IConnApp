@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using IConnApp.Data;
 using IConnApp.Data.Repositories;
+using IConnApp.Infastructure;
 using IConnApp.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,7 +44,8 @@ namespace IConnApp
 
             services.AddTransient<IUsersRepository, UsersRepository>();
 
-            services.AddAutoMapper();
+            services.AddAutoMapper()
+                .AddSwaggerDocumentation();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -55,6 +57,7 @@ namespace IConnApp
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+                app.UseSwaggerDocumentation();
             }
             else
             {
