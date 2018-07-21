@@ -9,8 +9,7 @@ using IConnApp.Data.Repositories;
 using IConnApp.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using AutoMapper;
-using IConnApp.ViewModels.Users;
+using IConnApp.Infastructure.Mappings;
 
 namespace IConnApp
 {
@@ -44,10 +43,7 @@ namespace IConnApp
 
             services.AddTransient<IUsersRepository, UsersRepository>();
 
-            Mapper.Initialize(cfg =>
-            {
-                cfg.AddProfile(new UserProfile());
-            });
+            services.AddAutoMapper();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
