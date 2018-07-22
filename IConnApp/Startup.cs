@@ -1,17 +1,20 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using IConnApp.Data;
-using IConnApp.Data.Repositories;
 using IConnApp.Infastructure;
 using IConnApp.Infastructure.Filters;
 using IConnApp.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using IConnApp.Infastructure.Mappings;
+using IConnApp.Infastructure.Modules;
 
 namespace IConnApp
 {
@@ -23,9 +26,10 @@ namespace IConnApp
         }
 
         public IConfiguration Configuration { get; }
+        public IContainer Container { get; private set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -43,16 +47,21 @@ namespace IConnApp
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
 
-            services.AddTransient<IUsersRepository, UsersRepository>();
-
             services.AddAutoMapper()
                 .AddSwaggerDocumentation();
 
             services.AddMvc(options =>
-                {
-                    options.Filters.Add(new ValidateModelStateFilter());
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            {
+                options.Filters.Add(new ValidateModelStateFilter());
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            // Add Autofac
+            var builder = new ContainerBuilder();
+            builder.Populate(services);
+            builder.RegisterModule<RepositoryModule>();
+            this.Container = builder.Build();
+
+            return new AutofacServiceProvider(this.Container);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
