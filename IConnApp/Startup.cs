@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using IConnApp.Data;
 using IConnApp.Data.Repositories;
 using IConnApp.Infastructure;
+using IConnApp.Infastructure.Filters;
 using IConnApp.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,7 +48,11 @@ namespace IConnApp
             services.AddAutoMapper()
                 .AddSwaggerDocumentation();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc(options =>
+                {
+                    options.Filters.Add(new ValidateModelStateFilter());
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

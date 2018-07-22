@@ -44,5 +44,14 @@ namespace IConnApp.Controllers
                 user = Mapper.Map<UserViewModel>(user)
             });
         }
+
+        [HttpPost]
+        public IActionResult Create([FromBody] UserEditViewModel model)
+        {
+            // instead of
+            // if (!ModelState.IsValid) return BadRequest(ModelState);
+            // use filter
+            return Ok(model);
+        }
     }
 }
