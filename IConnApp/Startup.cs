@@ -59,6 +59,8 @@ namespace IConnApp
             var builder = new ContainerBuilder();
             builder.Populate(services);
             builder.RegisterModule<RepositoryModule>();
+            builder.RegisterModule<ServiceModule>();
+            builder.RegisterModule<StoreModule>();
             this.Container = builder.Build();
 
             return new AutofacServiceProvider(this.Container);
