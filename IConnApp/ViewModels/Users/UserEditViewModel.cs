@@ -14,7 +14,13 @@ namespace IConnApp.ViewModels.Users
         [Required, DataType(DataType.EmailAddress), MinLength(6)]
         public string Email { get; set; }
 
-        [Required, MinLength(6)]
-        public string UserName { get; set; }
+        [Required, MinLength(2)]
+        public string Name { get; set; }
+
+        [Required, MinLength(2)]
+        public string Surname { get; set; }
+
+        [Required, Range(16, 99, ErrorMessage = "Age must be between 16 and 99 years")]
+        public int Age { get; set; }
     }
 }
