@@ -44,6 +44,17 @@ namespace IConnApp.Controllers
             });
         }
 
+        [HttpGet("search")]
+        public async Task<IActionResult> Search([FromQuery] string searchString)
+        {
+            var results = await _usersRepository.Search(searchString);
+
+            return Ok(new
+            {
+                results = Mapper.Map<UserViewModel[]>(results)
+            });
+        }
+
         // eg. /api/users/?email=christos@fou.com
         [HttpGet]
         public async Task<IActionResult> GetByEmailQuery([FromQuery]string email)

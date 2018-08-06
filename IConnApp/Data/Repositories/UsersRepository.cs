@@ -14,6 +14,8 @@ namespace IConnApp.Data.Repositories
         Task<ApplicationUser> GetByEmail(string email);
 
         Task<List<ApplicationUser>> GetAllUsers();
+
+        Task<IEnumerable<ApplicationUser>> Search(string searchString);
     }
 
     public class UsersRepository : IUsersRepository
@@ -40,6 +42,13 @@ namespace IConnApp.Data.Repositories
         public Task<List<ApplicationUser>> GetAllUsers()
         {
             return _db.Users.OrderBy(c => c.Id).ToListAsync();
+        }
+
+        public async Task<IEnumerable<ApplicationUser>> Search(string searchString)
+        {
+            return await _db.Users.Where(c => c.Name.ToLower().Contains(searchString.ToLower()) 
+                                              || c.Surname.ToLower().Contains(searchString.ToLower())
+                                              || c.Email.ToLower().Contains(searchString.ToLower())).ToListAsync();
         }
     }
 }
