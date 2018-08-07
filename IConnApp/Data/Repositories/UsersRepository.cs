@@ -8,6 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IConnApp.Data.Repositories
 {
+    public enum SortDirection
+    {
+        Asc = 0,
+        Dsc = 1
+    }
     public interface IUsersRepository
     {
         Task<int> CountAsync();
@@ -15,7 +20,9 @@ namespace IConnApp.Data.Repositories
 
         Task<List<ApplicationUser>> GetAllUsers();
 
-        Task<List<ApplicationUser>> GetUsersByPagenation(int page, int pageSize);
+        Task<List<ApplicationUser>> GetUsersByPagination(int page, int pageSize);
+
+        Task<IEnumerable<ApplicationUser>> GetUsersBySortingDirection(string direction);
 
         Task<IEnumerable<ApplicationUser>> Search(string searchString);
     }
@@ -46,14 +53,24 @@ namespace IConnApp.Data.Repositories
             return _db.Users.OrderBy(c => c.Id).ToListAsync();
         }
 
-        public Task<List<ApplicationUser>> GetUsersByPagenation(int page, int pageSize)
+        public Task<List<ApplicationUser>> GetUsersByPagination(int page, int pageSize)
         {
             return _db.Users.OrderBy(c => c.Id).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
         }
 
+        public async Task<IEnumerable<ApplicationUser>> GetUsersBySortingDirection(string direction)
+        {
+            if (direction == SortDirection.Dsc.ToString())
+            {
+                return await _db.Users.OrderByDescending(c => c.Id).ToListAsync();
+            }
+
+            return await _db.Users.OrderBy(c => c.Id).ToListAsync();
+        }
+
         public async Task<IEnumerable<ApplicationUser>> Search(string searchString)
         {
-            return await _db.Users.Where(c => c.Name.ToLower().Contains(searchString.ToLower()) 
+            return await _db.Users.Where(c => c.Name.ToLower().Contains(searchString.ToLower())
                                               || c.Surname.ToLower().Contains(searchString.ToLower())
                                               || c.Email.ToLower().Contains(searchString.ToLower())).ToListAsync();
         }

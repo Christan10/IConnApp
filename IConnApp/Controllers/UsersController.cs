@@ -45,12 +45,23 @@ namespace IConnApp.Controllers
         }
 
         [HttpGet("getPageUsers")]
-        public async Task<IActionResult> GetUsersByPagenation([FromQuery] int page, int pageSize)
+        public async Task<IActionResult> GetUsersByPagination([FromQuery] int page, int pageSize)
         {
-            var users = await _usersRepository.GetUsersByPagenation(page, pageSize);
+            var users = await _usersRepository.GetUsersByPagination(page, pageSize);
             return Ok(new
             {
                 users = Mapper.Map<UserViewModel[]>(users)
+            });
+        }
+
+        [HttpGet("getUsersBySortingDirection")]
+        public async Task<IActionResult> GetUsersBySortingDirection(string direction)
+        {
+            var results = await _usersRepository.GetUsersBySortingDirection(direction);
+
+            return Ok(new
+            {
+                results = Mapper.Map<UserViewModel[]>(results)
             });
         }
 
