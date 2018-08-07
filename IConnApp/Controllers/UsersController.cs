@@ -44,6 +44,16 @@ namespace IConnApp.Controllers
             });
         }
 
+        [HttpGet("getPageUsers")]
+        public async Task<IActionResult> GetUsersByPagenation([FromQuery] int page, int pageSize)
+        {
+            var users = await _usersRepository.GetUsersByPagenation(page, pageSize);
+            return Ok(new
+            {
+                users = Mapper.Map<UserViewModel[]>(users)
+            });
+        }
+
         [HttpGet("search")]
         public async Task<IActionResult> Search([FromQuery] string searchString)
         {

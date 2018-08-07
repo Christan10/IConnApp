@@ -15,6 +15,8 @@ namespace IConnApp.Data.Repositories
 
         Task<List<ApplicationUser>> GetAllUsers();
 
+        Task<List<ApplicationUser>> GetUsersByPagenation(int page, int pageSize);
+
         Task<IEnumerable<ApplicationUser>> Search(string searchString);
     }
 
@@ -42,6 +44,11 @@ namespace IConnApp.Data.Repositories
         public Task<List<ApplicationUser>> GetAllUsers()
         {
             return _db.Users.OrderBy(c => c.Id).ToListAsync();
+        }
+
+        public Task<List<ApplicationUser>> GetUsersByPagenation(int page, int pageSize)
+        {
+            return _db.Users.OrderBy(c => c.Id).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
         }
 
         public async Task<IEnumerable<ApplicationUser>> Search(string searchString)
