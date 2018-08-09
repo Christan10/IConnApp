@@ -65,6 +65,17 @@ namespace IConnApp.Controllers
             });
         }
 
+        [HttpGet("getUsersSortedByProperty")]
+        public async Task<IActionResult> GetUsersSortedByProperty(string property)
+        {
+            var results = await _usersRepository.GetUsersSortedByProperty(property);
+
+            return Ok(new
+            {
+                results = Mapper.Map<UserViewModel[]>(results)
+            });
+        }
+
         [HttpGet("search")]
         public async Task<IActionResult> Search([FromQuery] string searchString)
         {

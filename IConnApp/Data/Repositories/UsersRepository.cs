@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using IConnApp.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 namespace IConnApp.Data.Repositories
@@ -23,6 +24,8 @@ namespace IConnApp.Data.Repositories
         Task<List<ApplicationUser>> GetUsersByPagination(int page, int pageSize);
 
         Task<IEnumerable<ApplicationUser>> GetUsersBySortingDirection(string direction);
+
+        Task<IEnumerable<ApplicationUser>> GetUsersSortedByProperty(string property);
 
         Task<IEnumerable<ApplicationUser>> Search(string searchString);
     }
@@ -66,6 +69,23 @@ namespace IConnApp.Data.Repositories
             }
 
             return await _db.Users.OrderBy(c => c.Id).ToListAsync();
+        }
+
+        public async Task<IEnumerable<ApplicationUser>> GetUsersSortedByProperty(string property)
+        {
+            switch (property)
+            {
+                case "Name":
+                    return await _db.Users.OrderBy(c => c.Name).ToListAsync();
+                case "Surname":
+                    return await _db.Users.OrderBy(c => c.Surname).ToListAsync();
+                case "Age":
+                    return await _db.Users.OrderBy(c => c.Age).ToListAsync();
+                case "Email":
+                    return await _db.Users.OrderBy(c => c.Email).ToListAsync();
+                default:
+                    return await _db.Users.OrderBy(c => c.Id).ToListAsync();
+            }
         }
 
         public async Task<IEnumerable<ApplicationUser>> Search(string searchString)
